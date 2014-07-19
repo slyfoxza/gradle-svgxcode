@@ -1,0 +1,70 @@
+/* ********************************************************************************************** */
+/*
+ * Copyright 2014 Philip Cronje
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+/* ********************************************************************************************** */
+group = 'net.za.slyfox.gradle'
+description = 'SVG transcoding Gradle plugin'
+version = '1.0.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+publishing {
+	publications {
+		plugin(MavenPublication) {
+			from components.java
+
+			pom.withXml {
+				final githubURL = 'https://github.com/slyfoxza/gradle-svgxcode'
+				final scmURL = "scm:git:${githubURL}.git"
+
+				def pom = asNode()
+				pom.appendNode('name', description)
+				pom.appendNode('description', 'Gradle plugin allowing SVG files to be transcoded as'
+						+ ' part of a build, using the Apache Batik library.')
+				pom.appendNode('url', githubURL)
+				pom.appendNode('inceptionYear', '2014')
+
+				def licenses = pom.appendNode('licenses')
+				def license = licenses.appendNode('license')
+				license.appendNode('name', 'The Apache Software License, Version 2.0')
+				license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+				license.appendNode('distribution', 'repo')
+
+				def developers = pom.appendNode('developers')
+				def developer = developers.appendNode('developer')
+				developer.appendNode('id', 'philipcronje')
+				developer.appendNode('name', 'Philip Cronje')
+				developer.appendNode('timezone', '+2')
+
+				def scm = pom.appendNode('scm')
+				scm.appendNode('connection', scmURL)
+				scm.appendNode('developerConnection', scmURL)
+				scm.appendNode('url', githubURL)
+			}
+		}
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile gradleApi()
+
+	[ 'codec', 'transcoder' ].each { module ->
+		compile group: 'org.apache.xmlgraphics', name: "batik-$module", version: '1.7'
+	}
+}
