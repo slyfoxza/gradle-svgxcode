@@ -106,8 +106,6 @@ public class AndroidTranscode extends DefaultTask {
 	@TaskAction
 	public void transcode() {
 
-		System.out.println("transcode() called");
-
 		if(width == 0.0) {
 			throw new RuntimeException("Must specify a width");
 		}
@@ -122,7 +120,6 @@ public class AndroidTranscode extends DefaultTask {
 	 */
 	public void transcode(File file, String name) throws IOException {
 
-		System.out.println("transcode(file=" + file.toString() + ", name=" + name + ") called");
 		String outputName = generateOutputName(name);
 
 		List<Density> densities = this.densities;
@@ -194,10 +191,8 @@ public class AndroidTranscode extends DefaultTask {
 	@SkipWhenEmpty
 	public FileTree getSources() {
 
-		System.out.println("getSources() called");
 		FileTree sources = getProject().fileTree(getProject().getProjectDir())
 				.matching(inputPatternSet);
-		System.out.println("sources.isEmpty() => " + sources.isEmpty());
 		return sources;
 	}
 
